@@ -57,7 +57,8 @@ Em uma tela como:
     Informe o tamanho total da memória (KB):
     Informe o Algoritmo de alocação (1-FF, 2-BF, 3-WF, 4-CF): 
 
-> Após o usuário definir os parâmetros de memória, esses parâmetros *NÃO PODERÃO MAIS SER ALTERADOS.*
+> [!WARNING]
+> Após o usuário definir os parâmetros de memória, esses parâmetros NÃO PODERÃO MAIS SER ALTERADOS.
 
 Na opção de adicionar processos, o usuário deverá definir:
 * Um nome para o processo a ser criado;
@@ -121,10 +122,12 @@ A ideia do cálculo da fragmentação externa é a seguinte:
 
     Fragmentação = Quantidade em bytes de regiões livres entre processos / Total da memória
 
-Isso inclui também uma região livre entre o início do espaço de endereçamento físico e o primeiro processo alocado (algo que pode vir a acontecer).
+>[!NOTE]
+>Isso inclui também uma região livre entre o início do espaço de endereçamento físico e o primeiro processo alocado (algo que pode vir a acontecer).
 
 ---
 
 ## Pilha de Tecnologia Proposta
 
 Como a aplicação será feita no terminal, a ideia é utilizar a poderosa linguagem C++ com suas bibliotecas e contêineres refinados para estruturas de dados necessárias durante o desenvolvimento do projeto. Além de oferecer interessantíssimas abstrações provenientes da Orientação a Objetos e a possibilidade de utilizar bibliotecas do bom e velho C. Caso os integrantes da dupla possuam tempo hábil (o que é pouco provável), pode ser pensado em algo utilizando o QT Creator, mas é pouco provável.
+
