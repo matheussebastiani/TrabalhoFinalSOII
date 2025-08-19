@@ -85,7 +85,7 @@ Após informar o nome do processo, o programa retornará:
 
 > O processo ${nome_processo} foi removido.
 
-##2.1. Fluxo de interação do Usuário no modo Paginação
+## 2.1. Fluxo de interação do Usuário no modo Paginação
 Caso o usuário selecione a opção 2 (Paginação), o simulador apresentará o seguinte MENU:
 
 == Menu Principal - Paginação ==
@@ -148,7 +148,7 @@ A opção `5. Resetar` limpará o conteúdo da memória e excluirá todos os pro
 
 O usuário poderá acompanhar como os processos serão alocados e removidos, além de poder visualizar o estado da memória durante a execução dos processos criados.
 
-3.1. Detalhe da Visualização de Dados - Paginação
+## 3.1. Detalhe da Visualização de Dados - Paginação
 Na opção 4 (Exibir Tabelas de Páginas), o simulador exibirá:
 
 - A tabela de páginas de cada processo, indicando quais páginas estão mapeadas em quais molduras;  
@@ -196,7 +196,7 @@ A ideia do cálculo da fragmentação externa é a seguinte:
 >Isso inclui também uma região livre entre o início do espaço de endereçamento físico e o primeiro processo alocado (algo que pode vir a acontecer).
 
 ---
-4.1. Métricas de Saída - Paginação
+## 4.1. Métricas de Saída - Paginação
 Ao finalizar (0. Sair), serão exibidas estatísticas relacionadas à memória, como:
 
 - Processos alocados e número de páginas de cada um;  
