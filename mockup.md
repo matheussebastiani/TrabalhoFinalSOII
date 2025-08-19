@@ -88,6 +88,7 @@ Após informar o nome do processo, o programa retornará:
 ## 2.1. Fluxo de interação do Usuário no modo Paginação
 Caso o usuário selecione a opção 2 (Paginação), o simulador apresentará o seguinte MENU:
 
+```
 == Menu Principal - Paginação ==
     1. Definir Parâmetros da Memória
     2. Adicionar Processos
@@ -95,6 +96,7 @@ Caso o usuário selecione a opção 2 (Paginação), o simulador apresentará o 
     4. Exibir Tabelas de Páginas
     5. Resetar
     0. Sair
+```
 
 > [!IMPORTANT]
 >Na opção 1, o usuário deverá informar:
@@ -205,10 +207,12 @@ Ao finalizar (0. Sair), serão exibidas estatísticas relacionadas à memória, 
 
 Exemplo:  
 
+```
 == Resultado Final - Paginação ==  
 Processos alocados: P1 (3 páginas), P2 (5 páginas)  
 Uso da memória: 68 / 100 KB (68.0%)  
-Fragmentação interna: 4 KB  
+Fragmentação interna: 4 KB
+```
 
 ## Pilha de Tecnologia Proposta
 
