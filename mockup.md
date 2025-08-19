@@ -85,6 +85,52 @@ Após informar o nome do processo, o programa retornará:
 
 > O processo ${nome_processo} foi removido.
 
+##2.1. Fluxo de interação do Usuário no modo Paginação
+Caso o usuário selecione a opção 2 (Paginação), o simulador apresentará o seguinte MENU:
+
+== Menu Principal - Paginação ==
+    1. Definir Parâmetros da Memória
+    2. Adicionar Processos
+    3. Remover Processos
+    4. Exibir Tabelas de Páginas
+    5. Resetar
+    0. Sair
+
+> [!IMPORTANT]
+>Na opção 1, o usuário deverá informar:
+
+- O tamanho total da memória (em KB ou MB, conforme definido);
+- O tamanho da moldura (frame), que será utilizado para dividir a memória.
+
+> 1  
+Informe o tamanho total da memória (KB):  
+Informe o tamanho da moldura (KB):  
+
+Esses parâmetros, uma vez definidos, **não poderão mais ser alterados**.
+
+Na opção de adicionar processos, o usuário deverá fornecer:
+
+- Nome do processo;  
+- Tamanho do processo (em KB).  
+
+O simulador irá automaticamente dividir o processo em páginas e alocá-las em molduras disponíveis.
+
+> 2  
+Nome do processo:  
+Tamanho (KB):  
+
+Mensagem de confirmação:  
+
+Processo ${nome_processo} adicionado.  
+
+Na opção de remover processos, o usuário deverá informar o nome do processo, e o simulador liberará as molduras utilizadas.
+
+> 3  
+Informe o processo a ser removido:  
+O processo ${nome_processo} foi removido.  
+
+---
+
 ## 3. Detalhe da Visualização de Dados - Alocação Contígua
 
 A opção `4. Exibir Memória`, exibirá o estado atual da memória física, em blocos, ilustrando qual processo está alocado para o respectivo bloco. Supondo que exista um processo P1 na memória ocupando um espaço `x`. Algo como o ilustrado em seguida deverá aparecer:
@@ -101,6 +147,30 @@ A opção `5. Resetar` limpará o conteúdo da memória e excluirá todos os pro
 
 
 O usuário poderá acompanhar como os processos serão alocados e removidos, além de poder visualizar o estado da memória durante a execução dos processos criados.
+
+3.1. Detalhe da Visualização de Dados - Paginação
+Na opção 4 (Exibir Tabelas de Páginas), o simulador exibirá:
+
+- A tabela de páginas de cada processo, indicando quais páginas estão mapeadas em quais molduras;  
+- O estado atual da memória física, mostrando o conteúdo de cada moldura.
+
+Exemplo simplificado:
+
+> 4  
+Tabela de Páginas - Processo P1  
+Página | Moldura  
+0      | 2  
+1      | 5  
+2      | 6  
+
+Memória Física:  
++-----------------------------------------+  
+| P1(p0) | LIVRE | P1(p1) | P1(p2) | LIVRE | ... |  
++-----------------------------------------+  
+
+A opção 5 (Resetar) limpará a memória e todas as tabelas de páginas.  
+
+---
 
 ## 4. Métricas de saída
 
@@ -126,6 +196,19 @@ A ideia do cálculo da fragmentação externa é a seguinte:
 >Isso inclui também uma região livre entre o início do espaço de endereçamento físico e o primeiro processo alocado (algo que pode vir a acontecer).
 
 ---
+4.1. Métricas de Saída - Paginação
+Ao finalizar (0. Sair), serão exibidas estatísticas relacionadas à memória, como:
+
+- Processos alocados e número de páginas de cada um;  
+- Porcentagem de memória utilizada;  
+- Percentual de fragmentação interna (causada pelo último frame de cada processo não totalmente ocupado).  
+
+Exemplo:  
+
+== Resultado Final - Paginação ==  
+Processos alocados: P1 (3 páginas), P2 (5 páginas)  
+Uso da memória: 68 / 100 KB (68.0%)  
+Fragmentação interna: 4 KB  
 
 ## Pilha de Tecnologia Proposta
 
