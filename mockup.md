@@ -1,6 +1,11 @@
 
 # Mockup Trabalho Final Sistemas Operacionais II
 
+> [!CAUTION]
+> Antes de iniciar, é importante salientar que o documento entregue na tarefa proposta é uma conversão de um arquivo MarkDown para PDF.
+>
+> O conteúdo original está disponível no repositório do GitHub referente ao trabalho proposto, sendo possível encontrar o repositório aqui: [Link para o Repositório](https://github.com/matheussebastiani/TrabalhoFinalSOII).
+
 ## 1. Esboço da Interface principal:
 
 * O Simulador será pensado para que seja utilizado em um Terminal, com alguns comandos que o usuário terá a disposição e deverá inserí-los em seus menus.
