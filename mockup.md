@@ -10,7 +10,7 @@ Para excutar o simulador, o usuário terá à disposição:
 
 * O código-fonte com o arquivo Makefile para gerar o arquivo compilado a partir de seu ambiente (considerando que o usuário tenha o compilador gcc/g++);
 * O arquivo já compilado para Linux de 64 bits (`x86_64`);
-* ~~ O arquivo já compilado para Windows de 64 bits (`x86_64`) ~~.
+* ~O arquivo já compilado para Windows de 64 bits (`x86_64`)~.
 
 Para executar o simulador, o usuário deverá digitar o seguinte:
 
@@ -47,9 +47,12 @@ Ao selecionar o Modo 1, o usuário terá as seguintes opções:
         5. Resetar
         0. Sair
 
-Selecionando a opção 1, o usuário deverá informar:
-* Qual o tamanho total da memória (em KB, MB, a ser definido);
-* O Algoritmo a ser utilizado (_Worst Fit_, _Best Fit_, _First Fit_ ou _Circular Fit_).
+> [!IMPORTANT]
+> Selecionando a opção 1, o usuário deverá informar:
+>
+> Qual o tamanho total da memória (em KB, MB, a ser definido);
+>
+> O Algoritmo a ser utilizado (_Worst Fit_, _Best Fit_, _First Fit_ ou _Circular Fit_).
 
 Em uma tela como:
 
