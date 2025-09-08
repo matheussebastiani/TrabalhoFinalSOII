@@ -81,22 +81,24 @@ void MemoriaContigua::ConfiguraMemoria()
     lambda que "especializará" o std::sort na operação desejada
 */
 
-void MemoriaContigua::OrdenaVectorMemoria(){
+void MemoriaContigua::OrdenaVectorMemoria()
+{
 
-    if(particoes.empty()){
+    if (particoes.empty())
+    {
         cout << "Não foi possível ordenar o vector. O vector particoes está vazio." << endl;
     }
 
     std::sort(particoes.begin(), particoes.end(),
-    [](const BlocoMemoria& a, const BlocoMemoria& b){
-        return a.base < b.base;
-    });
+              [](const BlocoMemoria &a, const BlocoMemoria &b)
+              {
+                  return a.base < b.base;
+              });
 
     /*
         Lógica do sort: recebe o início e o final do vector de partições. A função de referência (similar ao qsort do C) recebe duas referencias para BlocosMemoria
         e ordena em ordem CRESCENTE da menor para a maior base. Ou seja, do menor "endereço de memória" para o maior
     */
-
 }
 
 /*
@@ -170,39 +172,43 @@ int MemoriaContigua::EncontraProcesso(pid_t pid)
     Essa função basicamente faz isso no vector. Essa função preserva o ordenamento por base
 */
 
-void MemoriaContigua::InsereOcupadoELivre(size_t indiceOcupado, const BlocoMemoria& livre){
+void MemoriaContigua::InsereOcupadoELivre(size_t indiceOcupado, const BlocoMemoria &livre)
+{
 
     particoes.insert(particoes.begin() + (indiceOcupado + 1), livre); // Insere o livre na posição seguinte ao ocupado
-
 }
-
 
 /*
     bool MemoriaContigua::AlocaProcesso(): tenta efetuar a alocação do processo com base no espaço em memória disponível de acordo com o algoritmo selecionado.
 */
 
-bool MemoriaContigua::AlocaProcesso(pid_t pid){
+bool MemoriaContigua::AlocaProcesso(pid_t pid)
+{
 
-    if(!configurouMemoria){
+    if (!configurouMemoria)
+    {
         cout << "Nencessário configurar a memória antes de alocar um processo." << endl;
         return false;
     }
 
     int indiceProcessoAlvo = EncontraProcesso(pid);
 
-    if(indiceProcessoAlvo < 0){
+    if (indiceProcessoAlvo < 0)
+    {
         cout << "Processo PID: " << pid << " não encontrado no vector de processos!" << endl;
         return false;
     }
 
-    Processo& ProcessoASerAlocado = processos[static_cast<size_t>(indiceProcessoAlvo)]; //1. Vector trabalha com size_t para enumerar seus índices
-                                                                                        //2. ProcessoASerAlocado recebe uma referência, ou seja, se mudar ProcessoASerAlocado, mudo o processos[indice]
-    if(ProcessoASerAlocado.alocado){
+    Processo &ProcessoASerAlocado = processos[static_cast<size_t>(indiceProcessoAlvo)]; // 1. Vector trabalha com size_t para enumerar seus índices
+                                                                                        // 2. ProcessoASerAlocado recebe uma referência, ou seja, se mudar ProcessoASerAlocado, mudo o processos[indice]
+    if (ProcessoASerAlocado.alocado)
+    {
         cout << "O processo PID: " << ProcessoASerAlocado.PID << " já está alocado." << endl;
         return false;
     }
 
-    if(ProcessoASerAlocado.tamanho <= 0){
+    if (ProcessoASerAlocado.tamanho <= 0)
+    {
         cout << "Processo PID: " << ProcessoASerAlocado.PID << "possui tamanho inválido (" << ProcessoASerAlocado.tamanho << ")." << endl;
         return false;
     }
@@ -213,55 +219,59 @@ bool MemoriaContigua::AlocaProcesso(pid_t pid){
     // ITERAR DE BLOCO EM BLOCO
     int indiceBloco = -1;
 
-    for(size_t i = 0; i < particoes.size(); i++){ // Vector trabalha com size_t
+    for (size_t i = 0; i < particoes.size(); i++)
+    { // Vector trabalha com size_t
 
-        BlocoMemoria& Bloco = particoes[i];
+        BlocoMemoria &Bloco = particoes[i];
 
-        if(Bloco.livre && (Bloco.tamanho >= ProcessoASerAlocado.tamanho)){ // Encontrou o índice de um bloco que satisfaz nossas necessidades no vector
-            indiceBloco = static_cast<int>(i);                             // Caso não encontre, indiceBloco permanece -1
+        if (Bloco.livre && (Bloco.tamanho >= ProcessoASerAlocado.tamanho))
+        {                                      // Encontrou o índice de um bloco que satisfaz nossas necessidades no vector
+            indiceBloco = static_cast<int>(i); // Caso não encontre, indiceBloco permanece -1
             break;
         }
-
     }
 
-    if(indiceBloco < 0){ // Não encontrou nenhum espaço livre na memória
+    if (indiceBloco < 0)
+    { // Não encontrou nenhum espaço livre na memória
 
         cout << "Não foi possível alocar o processo PID: " << ProcessoASerAlocado.PID << ". Não há região contígua na memória >= "
-        << ProcessoASerAlocado.tamanho << "KB." << endl;
+             << ProcessoASerAlocado.tamanho << "KB." << endl;
         return false;
     }
 
-    BlocoMemoria& BlocoSelecionado = particoes[static_cast<size_t>(indiceBloco)]; // Atribui o bloco encontrado para BlocoSelecionado
+    BlocoMemoria &BlocoSelecionado = particoes[static_cast<size_t>(indiceBloco)]; // Atribui o bloco encontrado para BlocoSelecionado
 
     /*
         Agora que um bloco de memória que satisfaça nossas necessidades foi escolhido, dois cenários são possíveis:
             1. O Bloco de memória alocado possui tamanho EXATAMENTE IGUAL ao que o processo necessita;
             2. O bloco de memória alocado possui tamanho maior do que o processo necessita.
-        
+
         Na situação 1, apenas marcaremos que aquele bloco agora pertence ao PID do processo alocado para ele;
         Na situação 2, teremos que fazer um "split", ou seja, alocar o que o processo precisa, e inserir, logo em seguida do espaço alocado para o processo,
         no vetor, um bloco de memória com a "quantidade de memória" que sobrou.
     */
 
-    if(ProcessoASerAlocado.tamanho == BlocoSelecionado.tamanho){ // Aqui, o processo recebe o bloco de memória inteiro
+    if (ProcessoASerAlocado.tamanho == BlocoSelecionado.tamanho)
+    { // Aqui, o processo recebe o bloco de memória inteiro
 
-        BlocoSelecionado.livre = false; // Alocado
+        BlocoSelecionado.livre = false;                 // Alocado
         BlocoSelecionado.PID = ProcessoASerAlocado.PID; // O Bloco pertence àquele processo
-        
+
         ProcessoASerAlocado.base = BlocoSelecionado.base;
         ProcessoASerAlocado.limite = BlocoSelecionado.base + ProcessoASerAlocado.tamanho - 1; // EndLimite = Base(bloco) + tamanho - 1
         ProcessoASerAlocado.alocado = true;
 
         // Printa e retorna True
-
-    } else if(BlocoSelecionado.tamanho > ProcessoASerAlocado.tamanho){ // Nesse caso, vamos ter que fazer o "split" (situação 2). Então teremos um bloco de memória OCUPADO pelo processo e o restante do bloco Original LIVRE
+    }
+    else if (BlocoSelecionado.tamanho > ProcessoASerAlocado.tamanho)
+    { // Nesse caso, vamos ter que fazer o "split" (situação 2). Então teremos um bloco de memória OCUPADO pelo processo e o restante do bloco Original LIVRE
 
         BlocoMemoria AreaOcupada;
 
         AreaOcupada.livre = false;
-        AreaOcupada.base  = BlocoSelecionado.base;
+        AreaOcupada.base = BlocoSelecionado.base;
         AreaOcupada.tamanho = ProcessoASerAlocado.tamanho;
-        AreaOcupada.PID = ProcessoASerAlocado.PID; 
+        AreaOcupada.PID = ProcessoASerAlocado.PID;
 
         BlocoMemoria AreaRestante;
         AreaRestante.livre = true;
@@ -283,10 +293,8 @@ bool MemoriaContigua::AlocaProcesso(pid_t pid){
 
     // FIM FIRST FIT
 
-    //retorna false -> caso impossível. O FLUXO DE EXECUÇÃO NÃO PODE CHEGAR AQUI POR MOTIVO ALGUM
-
+    // retorna false -> caso impossível. O FLUXO DE EXECUÇÃO NÃO PODE CHEGAR AQUI POR MOTIVO ALGUM
 }
-
 
 /*
     void MemoriaContigua::SimuladorMemoriaContigua(); -> Função principal do simulador. Será responsável por fazer a interface com o usuário e chamar outras
