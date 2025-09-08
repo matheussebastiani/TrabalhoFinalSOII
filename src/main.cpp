@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include "classes/MemoriaContigua.hpp"
 
 
 
@@ -18,16 +18,20 @@ int main(){
 
     std::cout << option;
 
+    MemoriaContigua simulador;
+
     switch(option){
 
-        case 1:
+        case 1:{
             // Chama função-membro que realiza a simulação de alocação contígua
+            MemoriaContigua simulador;          // Cria objeto do simulador
+            simulador.SimuladorMemoriaContigua(); // Chama o menu interno do simulador de alocação contigua
             break;
-        
-        case 2:
+        }
+        case 2:{
             // Chama função-membro que realiza a simulação de paginação
             break;
-
+        }
         default:
             std::cout << "Opção inválida!" << std::endl;
             exit(EXIT_FAILURE);

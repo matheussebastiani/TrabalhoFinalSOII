@@ -17,6 +17,10 @@ private:
     bool configurouMemoria = false;
     pid_t contador_pids = 0;
     int opcao;
+    int FirstFit(size_t tamanho);
+    int BestFit(size_t tamanho);
+    int WorstFit(size_t tamanho);
+    int CircularFit(size_t tamanho);
 
 public:
     
@@ -32,6 +36,7 @@ public:
     int PrintMenu();
     void ConfiguraMemoria();
     void OrdenaVectorMemoria();
+    void ExibeMemoria();
 
 };
 

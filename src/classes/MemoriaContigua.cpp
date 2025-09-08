@@ -2,6 +2,7 @@
 #include "MemoriaContigua.hpp"
 #include <string>
 #include <algorithm> // std::sort -> será necessário para manter o vector ordenado
+#include <limits>
 
 using namespace std;
 
@@ -182,6 +183,87 @@ void MemoriaContigua::InsereOcupadoELivre(size_t indiceOcupado, const BlocoMemor
     bool MemoriaContigua::AlocaProcesso(): tenta efetuar a alocação do processo com base no espaço em memória disponível de acordo com o algoritmo selecionado.
 */
 
+                //Função para exibir de fato a mememoria
+void MemoriaContigua::ExibeMemoria() {
+    if (particoes.empty()) {
+        std::cout << "A memória ainda não foi configurada ou está vazia." << std::endl; //se estiver vazio provoca esse "erro"
+        return;
+    }
+
+    std::cout << "=== Estado da Memória ===" << std::endl;
+    for (size_t i = 0; i < particoes.size(); ++i) {
+        const BlocoMemoria& bloco = particoes[i];
+
+        std::cout << "Bloco " << i 
+                  << ": Base = " << bloco.base               //mostra o bloco, a base, o amanho e se esta livre ou ocupado, com  PID
+                  << ", Tamanho = " << bloco.tamanho << " KB, "
+                  << (bloco.livre ? "Livre" : "Ocupado (PID " + std::to_string(bloco.PID) + ")")
+                  << std::endl;
+    }
+    std::cout << "=========================" << std::endl;
+}
+
+/*
+    Elaboraçao das funcoes relacionadas aos algoritmos (FIRST-FIT, BEST-FIT, WORST-FIT e CIRCULAR-FIT)
+                                    (algoritmos de seleção de blocos)
+*/
+
+                        //FIRST-FIT
+int MemoriaContigua::FirstFit(size_t tamanho) {
+    for (size_t i = 0; i < particoes.size(); i++) {
+        if (particoes[i].livre && particoes[i].tamanho >= tamanho) {
+            return static_cast<int>(i);
+        }
+    }
+    return -1;
+}
+                        // BEST FIT
+int MemoriaContigua::BestFit(size_t tamanho) {
+    int indice = -1;
+    size_t menor = std::numeric_limits<size_t>::max(); //uso do numeric_limits ao inves do SIZE_MAX por portabilidade
+
+    for (size_t i = 0; i < particoes.size(); ++i) {
+        if (particoes[i].livre && particoes[i].tamanho >= tamanho) {
+            if (particoes[i].tamanho < menor) {
+                menor = particoes[i].tamanho;
+                indice = static_cast<int>(i);
+            }
+        }
+    }
+    return indice;
+}
+                        // WORST FIT
+int MemoriaContigua::WorstFit(size_t tamanho) {
+    int indice = -1;
+    size_t maior = 0;
+
+    for (size_t i = 0; i < particoes.size(); ++i) {
+        if (particoes[i].livre && particoes[i].tamanho >= tamanho) {
+            if (particoes[i].tamanho > maior) {
+                maior = particoes[i].tamanho;
+                indice = static_cast<int>(i);
+            }
+        }
+    }
+    return indice;
+}
+                        // CIRCULAR FIT
+int MemoriaContigua::CircularFit(size_t tamanho) {
+    if (particoes.empty()) return -1;
+
+    static size_t ultimaPos = 0;
+    size_t n = particoes.size();
+
+    for (size_t i = 0; i < n; ++i) {
+        size_t idx = (ultimaPos + i) % n;
+        if (particoes[idx].livre && particoes[idx].tamanho >= tamanho) {
+            ultimaPos = idx; // guarda a posição para próxima busca
+            return static_cast<int>(idx);
+        }
+    }
+    return -1;
+}
+
 bool MemoriaContigua::AlocaProcesso(pid_t pid)
 {
 
@@ -219,6 +301,24 @@ bool MemoriaContigua::AlocaProcesso(pid_t pid)
     // ITERAR DE BLOCO EM BLOCO
     int indiceBloco = -1;
 
+    switch (algoritmo) {
+    case 1: //  caso 1 para o First Fit
+        indiceBloco = FirstFit(ProcessoASerAlocado.tamanho);
+        break;
+    case 2: // caso 2 para o Best Fit
+        indiceBloco = BestFit(ProcessoASerAlocado.tamanho);
+        break;
+    case 3: // caso 3 para o Worst Fit
+        indiceBloco = WorstFit(ProcessoASerAlocado.tamanho);
+        break;
+    case 4: // caso 4 para o Circular Fit
+        indiceBloco = CircularFit(ProcessoASerAlocado.tamanho);
+        break;
+    default:
+        cout << "Algoritmo inválido!" << endl;
+        return false;
+}
+/**
     for (size_t i = 0; i < particoes.size(); i++)
     { // Vector trabalha com size_t
 
@@ -230,7 +330,7 @@ bool MemoriaContigua::AlocaProcesso(pid_t pid)
             break;
         }
     }
-
+*/
     if (indiceBloco < 0)
     { // Não encontrou nenhum espaço livre na memória
 
@@ -261,7 +361,12 @@ bool MemoriaContigua::AlocaProcesso(pid_t pid)
         ProcessoASerAlocado.limite = BlocoSelecionado.base + ProcessoASerAlocado.tamanho - 1; // EndLimite = Base(bloco) + tamanho - 1
         ProcessoASerAlocado.alocado = true;
 
-        // Printa e retorna True
+        // Mostra para o usuário que o processo foi alocado com sucesso
+        // e informa a base e o limite do bloco de memória ocupado
+
+        cout << "Processo PID " << ProcessoASerAlocado.PID                    
+     << " alocado na memória com base " << ProcessoASerAlocado.base 
+     << " e limite " << ProcessoASerAlocado.limite << "." << endl;
     }
     else if (BlocoSelecionado.tamanho > ProcessoASerAlocado.tamanho)
     { // Nesse caso, vamos ter que fazer o "split" (situação 2). Então teremos um bloco de memória OCUPADO pelo processo e o restante do bloco Original LIVRE
@@ -288,7 +393,16 @@ bool MemoriaContigua::AlocaProcesso(pid_t pid)
         ProcessoASerAlocado.limite = AreaOcupada.base + ProcessoASerAlocado.tamanho - 1;
         ProcessoASerAlocado.alocado = true;
 
-        // Printa e retorna True
+        // Processo parcialmente alocado em um bloco maior.
+        // O bloco original foi dividido, a parte necessária é então alocada para o processo
+        // e o restante permanece livre, o usuário recebe feedback sobre a divisão.
+
+        cout << "Processo PID " << ProcessoASerAlocado.PID 
+        << " alocado na memória com base " << ProcessoASerAlocado.base 
+        << " e limite " << ProcessoASerAlocado.limite << "." << endl;
+
+        cout << "Bloco de memória dividido. Espaço restante: " 
+        << AreaRestante.tamanho << " KB livre." << endl;
     }
 
     // FIM FIRST FIT
@@ -313,28 +427,47 @@ void MemoriaContigua::SimuladorMemoriaContigua()
         {
 
         case 1:
-
             // Chamar função de definição de parâmetros de memória
+            ConfiguraMemoria();
+        break;
 
-        case 2:
-
+        case 2:{
             // Chamar função que cria um processo
             // logo depois chamar a função que mostra o estado da memória intrinsicamente (sugestao do professor)
+
+            pid_t pid = CriaProcesso();     // Cria o processo e retorna o PID
+            if (pid > 0) {
+                AlocaProcesso(pid);         // Tenta alocar o processo
+                ExibeMemoria();             // Mostra a memória atualizada
+            }
+        break;
+    }
         case 3:
 
             // Chamar função que remove um processo
+            
+        break;
 
         case 4:
-
-            // Chamar função que exibe o estado atual da memória
+            ExibeMemoria();
+            break;                       // chama a função que exibe a memória
 
         case 5:
 
             // Chamar função que reseta o simulador de memória contígua
 
+            particoes.clear();                  // da clear nas particoes e
+            processos.clear();                  // nos processos e por fim
+            configurouMemoria = false;          // reseta o simulador
+            contador_pids = 0;
+            std::cout << "Simulador resetado!" << std::endl;
+            break;
+
         case 0:
 
             // Break. Sai do laço e mostra as estatísticas finais
+            std::cout << "Saindo do simulador..." << std::endl;
+            return;
 
         default:
 
