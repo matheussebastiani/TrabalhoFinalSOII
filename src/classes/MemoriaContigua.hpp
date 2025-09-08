@@ -23,11 +23,15 @@ public:
     MemoriaContigua();
     ~MemoriaContigua();
 
+
     pid_t CriaProcesso();
-    bool AlocaProcesso();
+    bool AlocaProcesso(pid_t pid);
+    int EncontraProcesso(pid_t pid);
+    void InsereOcupadoELivre(size_t indiceOcupado, const BlocoMemoria& livre); // Os índices de vector são do tipo size_t
     void SimuladorMemoriaContigua();
     int PrintMenu();
     void ConfiguraMemoria();
+    void OrdenaVectorMemoria();
 
 };
 
