@@ -4,35 +4,35 @@ sistema de gerenciamento de memória contígua para processos em um ambiente
 de sistema operacional.
 
 A classe permite:
-- Criar processos e armazená-los em um vetor de processos.
+- Criar processos e armazená-los em um vetor de processos
 - Alocar processos em memória usando diferentes algoritmos:
     * First Fit
     * Best Fit
     * Worst Fit
     * Circular Fit
 - Remover processos da memória.
-- Exibir o estado atual da memória e das partições.
-- Configurar parâmetros iniciais da memória e ordenar os blocos.
-- Simular interativamente o gerenciamento de memória contígua via menu.
+- Exibir o estado atual da memória e das partições
+- Configurar parâmetros iniciais da memória e ordenar os blocos
+- Simular interativamente o gerenciamento de memória contígua via menu
 
 Estrutura interna:
 
-- particoes: vetor que representa os blocos de memória, livres ou ocupados.
-- processos: vetor de processos criados.
-- algoritmo: define qual algoritmo de alocação será utilizado.
-- configurouMemoria: flag que indica se a memória já foi configurada.
-- contador_pids: contador para gerar PIDs únicos para cada processo.
+- particoes: vetor que representa os blocos de memória, livres ou ocupados
+- processos: vetor de processos criados
+- algoritmo: define qual algoritmo de alocação será utilizado
+- configurouMemoria: flag que indica se a memória já foi configurada
+- contador_pids: contador para gerar PIDs únicos para cada processo
 
 Funções principais:
 
-- CriaProcesso()           : Cria um processo e adiciona ao vetor de processos.
-- AlocaProcesso(pid_t pid) : Tenta alocar um processo em memória.
-- RemoveProcesso(pid_t pid): Remove um processo da memória.
-- ExibeMemoria()           : Mostra o estado atual da memória e partições.
-- SimuladorMemoriaContigua(): Loop principal para interação do usuário.
-- ConfiguraMemoria()       : Configura os parâmetros iniciais da memória.
-- PrintMenu()              : Exibe o menu de operações.
-- OrdenaVectorMemoria()    : Ordena os blocos de memória por endereço base.
+- CriaProcesso()           : Cria um processo e adiciona ao vetor de processos
+- AlocaProcesso(pid_t pid) : Tenta alocar um processo em memória
+- RemoveProcesso(pid_t pid): Remove um processo da memória
+- ExibeMemoria()           : Mostra o estado atual da memória e partições
+- SimuladorMemoriaContigua(): Loop principal para interação do usuário
+- ConfiguraMemoria()       : Configura os parâmetros iniciais da memória
+- PrintMenu()              : Exibe o menu de operações
+- OrdenaVectorMemoria()    : Ordena os blocos de memória por endereço base
 */
 
 #ifndef MEMORIA_CONTIGUA_HPP

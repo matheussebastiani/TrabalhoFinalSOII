@@ -6,31 +6,31 @@ diferentes algoritmos de alocação de memória.
 
 Funcionalidades principais:
 
-1. PrintMenu()                : Exibe o menu principal do simulador e retorna a opção selecionada pelo usuário.
-2. ConfiguraMemoria()         : Configura a memória total disponível e define o algoritmo de alocação.
+1. PrintMenu()                : Exibe o menu principal do simulador e retorna a opção selecionada pelo usuário
+2. ConfiguraMemoria()         : Configura a memória total disponível e define o algoritmo de alocação
 3. OrdenaVectorMemoria()      : Ordena os blocos de memória por endereço base para manter consistência.
-4. CriaProcesso()             : Cria um novo processo, solicita informações do usuário e adiciona ao vetor de processos.
-5. EncontraProcesso(pid_t pid): Busca um processo pelo PID e retorna seu índice no vetor de processos.
+4. CriaProcesso()             : Cria um novo processo, solicita informações do usuário e adiciona ao vetor de processos
+5. EncontraProcesso(pid_t pid): Busca um processo pelo PID e retorna seu índice no vetor de processos
 6. InsereOcupadoELivre()      : Atualiza o vetor de blocos após a alocação de um processo em um bloco maior (split).
-7. AlocaProcesso(pid_t pid)   : Tenta alocar um processo na memória de acordo com o algoritmo selecionado (First, Best, Worst ou Circular Fit).
-8. ExibeMemoria()             : Mostra o estado atual da memória, indicando blocos livres e ocupados.
-9. RemoveProcesso(pid_t pid)  : Libera o bloco de memória de um processo e junta blocos livres adjacentes.
-10. SimuladorMemoriaContigua() : Função principal que implementa o loop de interação com o usuário, chamando as funções anteriores.
+7. AlocaProcesso(pid_t pid)   : Tenta alocar um processo na memória de acordo com o algoritmo selecionado (First, Best, Worst ou Circular Fit)
+8. ExibeMemoria()             : Mostra o estado atual da memória, indicando blocos livres e ocupados
+9. RemoveProcesso(pid_t pid)  : Libera o bloco de memória de um processo e junta blocos livres adjacentes
+10. SimuladorMemoriaContigua() : Função principal que implementa o loop de interação com o usuário, chamando as funções anteriores
 
 Algoritmos de alocação implementados:
 
-- First Fit    : Aloca no primeiro bloco livre que comporta o processo.
-- Best Fit     : Aloca no bloco livre de menor tamanho que ainda comporta o processo.
-- Worst Fit    : Aloca no bloco livre de maior tamanho disponível.
-- Circular Fit : Aloca em blocos livres seguindo a última posição usada, simulando alocação circular.
+- First Fit    : Aloca no primeiro bloco livre que comporta o processo
+- Best Fit     : Aloca no bloco livre de menor tamanho que ainda comporta o prcesso
+- Worst Fit    : Aloca no bloco livre de maior tamanho disponível
+- Circular Fit : Aloca em blocos livres seguindo a última posição usada, simulando alocação circular
 
 Estrutura de dados:
 
-- particoes : vetor de 'BlocoMemoria', que representa os blocos de memória disponíveis e ocupados.
-- processos : vetor de 'Processo', que contém todos os processos criados, alocados ou não.
-- algoritmo : número inteiro que define qual algoritmo de alocação será usado.
-- configurouMemoria : flag que indica se a memória foi inicializada.
-- contador_pids      : contador para gerar PIDs únicos para cada processo.
+- particoes : vetor de 'BlocoMemoria', que representa os blocos de memória disponíveis e ocupados
+- processos : vetor de 'Processo', que contém todos os processos criados, alocados ou não
+- algoritmo : número inteiro que define qual algoritmo de alocação será usado
+- configurouMemoria : flag que indica se a memória foi inicializada
+- contador_pids      : contador para gerar PIDs únicos para cada processo
 
 */
 
