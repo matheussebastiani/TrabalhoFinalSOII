@@ -1,3 +1,39 @@
+/*
+Este arquivo contém a implementação das funções da classe 'MemoriaContigua',
+definida no arquivo 'MemoriaContigua.hpp'. Ele simula um gerenciador de 
+memória contígua, permitindo criar, alocar e remover processos, utilizando 
+diferentes algoritmos de alocação de memória.
+
+Funcionalidades principais:
+
+1. PrintMenu()                : Exibe o menu principal do simulador e retorna a opção selecionada pelo usuário.
+2. ConfiguraMemoria()         : Configura a memória total disponível e define o algoritmo de alocação.
+3. OrdenaVectorMemoria()      : Ordena os blocos de memória por endereço base para manter consistência.
+4. CriaProcesso()             : Cria um novo processo, solicita informações do usuário e adiciona ao vetor de processos.
+5. EncontraProcesso(pid_t pid): Busca um processo pelo PID e retorna seu índice no vetor de processos.
+6. InsereOcupadoELivre()      : Atualiza o vetor de blocos após a alocação de um processo em um bloco maior (split).
+7. AlocaProcesso(pid_t pid)   : Tenta alocar um processo na memória de acordo com o algoritmo selecionado (First, Best, Worst ou Circular Fit).
+8. ExibeMemoria()             : Mostra o estado atual da memória, indicando blocos livres e ocupados.
+9. RemoveProcesso(pid_t pid)  : Libera o bloco de memória de um processo e junta blocos livres adjacentes.
+10. SimuladorMemoriaContigua() : Função principal que implementa o loop de interação com o usuário, chamando as funções anteriores.
+
+Algoritmos de alocação implementados:
+
+- First Fit    : Aloca no primeiro bloco livre que comporta o processo.
+- Best Fit     : Aloca no bloco livre de menor tamanho que ainda comporta o processo.
+- Worst Fit    : Aloca no bloco livre de maior tamanho disponível.
+- Circular Fit : Aloca em blocos livres seguindo a última posição usada, simulando alocação circular.
+
+Estrutura de dados:
+
+- particoes : vetor de 'BlocoMemoria', que representa os blocos de memória disponíveis e ocupados.
+- processos : vetor de 'Processo', que contém todos os processos criados, alocados ou não.
+- algoritmo : número inteiro que define qual algoritmo de alocação será usado.
+- configurouMemoria : flag que indica se a memória foi inicializada.
+- contador_pids      : contador para gerar PIDs únicos para cada processo.
+
+*/
+
 #include <iostream>
 #include "MemoriaContigua.hpp"
 #include <string>
@@ -33,7 +69,7 @@ void MemoriaContigua::ConfiguraMemoria()
 
     if (configurouMemoria)
     {
-        cout << "Os parâmetros de memória já foram definidos. Não é mais possível redefini-los" << endl;
+        cout << "Os parâmetros de memória já foram definidos. Não é possível redefini-los no momento." << endl;
         return;
     }
 
@@ -41,7 +77,7 @@ void MemoriaContigua::ConfiguraMemoria()
     {
 
         cout << "Tamanho Total da Memória: 1024KB" << endl;
-        cout << "Informe o Algoritmo de alocação (1-FF, 2-BF, 3-WF, 4-CF): ";
+        cout << "Informe o Algoritmo de alocação (1-First-Fit, 2-Best-Fit, 3-Worst-Fit, 4-Circular-Fit): ";
         cin >> algoritmo;
 
         if (algoritmo < 1 || algoritmo > 4)
@@ -126,7 +162,7 @@ pid_t MemoriaContigua::CriaProcesso()
 
     if (NovoProcesso.tamanho <= 0 || NovoProcesso.tamanho > TAMANHO_TOTAL_MEMORIA)
     { // Permite apenas valores entre 1KB e 1024KB
-        cout << "Tamanho inválido para o processo. Por favor, tente novamente." << endl;
+        cout << "Tamanho inválido para o processo. Por favor, insira um processo com o tamanho dentro do limite estabelecido." << endl;
         return -1;
     }
 
@@ -269,7 +305,7 @@ bool MemoriaContigua::AlocaProcesso(pid_t pid)
 
     if (!configurouMemoria)
     {
-        cout << "Nencessário configurar a memória antes de alocar um processo." << endl;
+        cout << "Necessário configurar a memória antes de alocar um processo." << endl;
         return false;
     }
 
@@ -291,7 +327,7 @@ bool MemoriaContigua::AlocaProcesso(pid_t pid)
 
     if (ProcessoASerAlocado.tamanho <= 0)
     {
-        cout << "Processo PID: " << ProcessoASerAlocado.PID << "possui tamanho inválido (" << ProcessoASerAlocado.tamanho << ")." << endl;
+        cout << "O processo com PID: " << ProcessoASerAlocado.PID << "possui tamanho inválido (" << ProcessoASerAlocado.tamanho << ")." << endl;
         return false;
     }
 
@@ -345,7 +381,7 @@ bool MemoriaContigua::AlocaProcesso(pid_t pid)
     /*
         Agora que um bloco de memória que satisfaça nossas necessidades foi escolhido, dois cenários são possíveis:
             1. O Bloco de memória alocado possui tamanho EXATAMENTE IGUAL ao que o processo necessita;
-            2. O bloco de memória alocado possui tamanho maior do que o processo necessita.
+            2. O bloco de memória alocado possui tamanho MAIOR do que o processo necessita.
 
         Na situação 1, apenas marcaremos que aquele bloco agora pertence ao PID do processo alocado para ele;
         Na situação 2, teremos que fazer um "split", ou seja, alocar o que o processo precisa, e inserir, logo em seguida do espaço alocado para o processo,
@@ -385,7 +421,7 @@ bool MemoriaContigua::AlocaProcesso(pid_t pid)
         AreaRestante.PID = BLOCO_LIVRE;
         AreaRestante.tamanho = BlocoSelecionado.tamanho - ProcessoASerAlocado.tamanho;
 
-        // Necessário inserir o bloco Ocupado no lugar do bloco ENCONTRADO no vector e inserir logo após ele a área restante
+        // Necessário inserir o bloco OCUPADO no lugar do bloco ENCONTRADO no vector e inserir logo após ele a área restante
 
         particoes[static_cast<size_t>(indiceBloco)] = AreaOcupada; // Substitui o bloco recém encontrado pela área ocupada
         InsereOcupadoELivre(static_cast<size_t>(indiceBloco), AreaRestante);
@@ -439,7 +475,7 @@ void MemoriaContigua::RemoveProcesso(pid_t pid) {
         if (!bloco.livre && bloco.PID == pid) {
             // Libera o bloco
             bloco.livre = true;
-            bloco.PID = BLOCO_LIVRE; // constante que você já usa pros blocos livres
+            bloco.PID = BLOCO_LIVRE; // constante usada para os blocos livres
             liberado = true;
             std::cout << " Processo " << pid << " removido da memória." << std::endl;
             break;
@@ -451,7 +487,7 @@ void MemoriaContigua::RemoveProcesso(pid_t pid) {
         return;
     }
 
-    // Atualiza status do processo
+    // Atualiza o status do processo
     proc.alocado = false;
     proc.base = 0;
     proc.limite = 0;
@@ -500,8 +536,6 @@ void MemoriaContigua::SimuladorMemoriaContigua()
         break;
     }
         case 3:
-
-            // Chamar função que remove um processo
             pid_t pid;
             std::cout << "Informe o PID do processo a ser removido: ";
             std::cin >> pid;
@@ -509,15 +543,14 @@ void MemoriaContigua::SimuladorMemoriaContigua()
             // Chama a função que remove o processo
             RemoveProcesso(pid);
 
-            // Exibe o estado atual da memória depois da remoção
+            // Exibe o estado atual da memória depois da remoção para que o usúario veja como está a memória
             ExibeMemoria();
             
         break;
 
         case 4:
-            ExibeMemoria();
-            break;                       // chama a função que exibe a memória
-
+            ExibeMemoria();     // chama a função que exibe a memória
+            break;               
         case 5:
 
             // Chamar função que reseta o simulador de memória contígua

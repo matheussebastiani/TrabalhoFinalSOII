@@ -24,16 +24,16 @@
 
 #include "MemoriaPaginada.hpp"
 #include <iostream>
-#include <limits> //verificar se os valores sao validos
-#include <cmath> //calculos matematicos
+#include <limits> //verificar se os valores são validos
+#include <cmath> //cálculos matemáticos
 
 using namespace std;
 
 
-  // Funções comuns da classe base Memoria
+  // Funções comuns da classe base Memoria (INTERAÇÃO COM O USÚARIO)
 
 int Memoria::PrintMenu() {
-    cout << "Escolha uma opção: ";
+    cout << "Escolha uma opção: "; //função que cria o início da interação com o usúario
     cin >> opcao;
     return opcao;
 }
@@ -41,7 +41,7 @@ int Memoria::PrintMenu() {
 pid_t Memoria::CriaProcesso() {
     Processo novo;
     cout << "Informe o nome do processo: ";
-    cin >> novo.nome;
+    cin >> novo.nome;                              //função que vai criar os processos
 
     cout << "Informe o tamanho do processo (KB): ";
     cin >> novo.tamanho;
@@ -64,7 +64,7 @@ pid_t Memoria::CriaProcesso() {
 }
 
 int Memoria::EncontraProcesso(pid_t pid) {
-    for (size_t i = 0; i < processos.size(); i++) {
+    for (size_t i = 0; i < processos.size(); i++) { //função que encontra processos
         if (processos[i].PID == pid)
             return static_cast<int>(i);
     }
@@ -72,7 +72,7 @@ int Memoria::EncontraProcesso(pid_t pid) {
 }
 
 void Memoria::ResetarMemoria() {
-    processos.clear();
+    processos.clear();            //função que irá resetar a memória
     contador_pids = 0;
     configurouMemoria = false;
     cout << "Memória resetada." << endl;
@@ -90,7 +90,7 @@ void MemoriaPaginada::ConfiguraMemoria() {
     if (configurouMemoria) {
         cout << "Memória já configurada!" << endl;
         return;
-    }
+    }                                                       //configuração da memória feita de acordo com as intenções do usuário
 
     cout << "Informe o tamanho total da memória (KB): ";
     cin >> tamanho_total_memoria;
@@ -161,7 +161,7 @@ void MemoriaPaginada::RemoveProcesso(pid_t pid) {
 
     Processo &proc = processos[idx];
     if (!proc.alocado) {
-        cout << "O processo não está alocado!" << endl;
+        cout << "O processo não está alocado!" << endl;  //função que vai remover processos alocados e informar caso o processo nao esteja alocado
         return;
     }
 
@@ -184,7 +184,7 @@ void MemoriaPaginada::ExibeMemoria() {
         if (memoria_fisica[i] == -1)
             cout << "LIVRE";
         else
-            cout << "PID " << memoria_fisica[i];
+            cout << "PID " << memoria_fisica[i];     //exibe como está a memória no momento
         cout << endl;
     }
 
@@ -200,14 +200,14 @@ void MemoriaPaginada::ExibeMemoria() {
 
 void MemoriaPaginada::Simulador() {
     while (true) {
-        cout << "== Menu Principal - Paginação ==" << endl;
+        cout << "== Menu Principal - Paginação ==" << endl;       //inicia o simulador de memoria paginada (Interface de Usuário)
         cout << "\t 1. Definir Parâmetros da Memória" << endl;
         cout << "\t 2. Adicionar Processo" << endl;
         cout << "\t 3. Remover Processo" << endl;
         cout << "\t 4. Exibir Tabelas de Páginas" << endl;
         cout << "\t 5. Resetar" << endl;
         cout << "\t 0. Sair" << endl;
-        PrintMenu();
+        PrintMenu();                                               
 
         switch (opcao) {
             case 1:
@@ -233,7 +233,7 @@ void MemoriaPaginada::Simulador() {
                     cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Descarta entrada inválida
                     cout << "Entrada inválida!" << endl;
                 } else {
-                    // Verifica se o PID existe antes de remover
+                    // Verifica se o PID existe de fato antes de remover
                     int idx = EncontraProcesso(pid);
                     if (idx < 0) {
                         cout << "O processo PID " << pid << " não foi encontrado!" << endl;
@@ -247,18 +247,18 @@ void MemoriaPaginada::Simulador() {
             
             }
             case 4:
-                ExibeMemoria();
+                ExibeMemoria();    //chama a função que ira exibir a memória no simulador
                 break;
             case 5:
                 ResetarMemoria();
-                memoria_fisica.assign(num_frames, -1);
+                memoria_fisica.assign(num_frames, -1);  //chama a função que vai dar um reset na memória
                 tabelas_paginas.clear();
                 break;
             case 0:
-                cout << "Saindo do simulador..." << endl;
+                cout << "Saindo do simulador..." << endl;   //sai do simulador
                 return;
             default:
-                cout << "Opção inválida!" << endl;
+                cout << "Opção inválida!" << endl; //caso não caia em nenhum case retorna que a opção foi inválida
         }
     }
 }
