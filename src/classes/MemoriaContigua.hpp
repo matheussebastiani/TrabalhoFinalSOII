@@ -37,6 +37,7 @@ public:
     void ConfiguraMemoria();
     void OrdenaVectorMemoria();
     void ExibeMemoria();
+    void RemoveProcesso(pid_t pid);
 
 };
 

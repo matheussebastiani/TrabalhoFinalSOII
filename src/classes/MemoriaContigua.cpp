@@ -411,6 +411,62 @@ bool MemoriaContigua::AlocaProcesso(pid_t pid)
     // retorna false -> caso impossível. O FLUXO DE EXECUÇÃO NÃO PODE CHEGAR AQUI POR MOTIVO ALGUM
 }
 
+
+/*
+    void MemoriaContigua::RemoveProcesso(pid_t pid):
+    - Libera o bloco de memória associado ao processo informado
+    - Marca o processo como desalocado
+    - Junta blocos livres adjacentes para evitar fragmentação externa
+*/
+void MemoriaContigua::RemoveProcesso(pid_t pid) {
+        // Encontra o índice do processo pelo PID
+    int idx = EncontraProcesso(pid);
+    if (idx < 0) {
+        std::cout << " Processo " << pid << " não encontrado!" << std::endl;
+        return;
+    }
+
+    Processo &proc = processos[static_cast<size_t>(idx)];
+    if (!proc.alocado) {
+        std::cout << " Processo " << pid << " não está alocado!" << std::endl;
+        return;
+    }
+
+    bool liberado = false;
+
+    // Procura o bloco de memória que pertence a esse processo
+    for (auto &bloco : particoes) {
+        if (!bloco.livre && bloco.PID == pid) {
+            // Libera o bloco
+            bloco.livre = true;
+            bloco.PID = BLOCO_LIVRE; // constante que você já usa pros blocos livres
+            liberado = true;
+            std::cout << " Processo " << pid << " removido da memória." << std::endl;
+            break;
+        }
+    }
+
+    if (!liberado) {
+        std::cout << " Bloco do processo " << pid << " não encontrado em particoes!" << std::endl;
+        return;
+    }
+
+    // Atualiza status do processo
+    proc.alocado = false;
+    proc.base = 0;
+    proc.limite = 0;
+
+    // Junta blocos livres adjacentes
+    for (size_t i = 0; i + 1 < particoes.size();) {
+        if (particoes[i].livre && particoes[i + 1].livre) {
+            particoes[i].tamanho += particoes[i + 1].tamanho;
+            particoes.erase(particoes.begin() + i + 1);
+        } else {
+            i++;
+        }
+    }
+}
+
 /*
     void MemoriaContigua::SimuladorMemoriaContigua(); -> Função principal do simulador. Será responsável por fazer a interface com o usuário e chamar outras
     funções para efetuar as solicitações necessárias.
@@ -446,6 +502,15 @@ void MemoriaContigua::SimuladorMemoriaContigua()
         case 3:
 
             // Chamar função que remove um processo
+            pid_t pid;
+            std::cout << "Informe o PID do processo a ser removido: ";
+            std::cin >> pid;
+
+            // Chama a função que remove o processo
+            RemoveProcesso(pid);
+
+            // Exibe o estado atual da memória depois da remoção
+            ExibeMemoria();
             
         break;
 
