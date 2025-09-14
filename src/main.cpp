@@ -1,5 +1,6 @@
 #include <iostream>
 #include "classes/MemoriaContigua.hpp"
+#include "classes/MemoriaPaginada.hpp"
 
 
 
@@ -29,7 +30,8 @@ int main(){
             break;
         }
         case 2:{
-            // Chama função-membro que realiza a simulação de paginação
+            MemoriaPaginada simuladorPaginada;
+            simuladorPaginada.Simulador();  // Chama o menu da memória paginada
             break;
         }
         default:

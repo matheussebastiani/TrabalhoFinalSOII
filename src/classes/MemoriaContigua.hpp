@@ -24,8 +24,8 @@ private:
 
 public:
     
-    MemoriaContigua();
-    ~MemoriaContigua();
+    //MemoriaContigua();
+   // ~MemoriaContigua();
 
 
     pid_t CriaProcesso();

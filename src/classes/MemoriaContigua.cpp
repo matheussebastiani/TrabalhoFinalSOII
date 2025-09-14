@@ -295,6 +295,7 @@ bool MemoriaContigua::AlocaProcesso(pid_t pid)
         return false;
     }
 
+
     // Primeira lógica implementada: First Fit --------------------------> Transformar em função posteriormente o que está entre o incio e o fim
     // INICIO FIRST FIT
     // Lógica FIRST FIT -> Percorre as partições da memória e encontra o PRIMEIRO BLOCO DE MEMÓRIA POSSÍVEL DISPONÍVEL
@@ -404,7 +405,7 @@ bool MemoriaContigua::AlocaProcesso(pid_t pid)
         cout << "Bloco de memória dividido. Espaço restante: " 
         << AreaRestante.tamanho << " KB livre." << endl;
     }
-
+    return true;
     // FIM FIRST FIT
 
     // retorna false -> caso impossível. O FLUXO DE EXECUÇÃO NÃO PODE CHEGAR AQUI POR MOTIVO ALGUM
