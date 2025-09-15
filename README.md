@@ -99,12 +99,50 @@ Classe que simula a alocação contígua de memória.
 - `RemoveProcesso(pid_t pid)`: Remove o processo da memória, liberando blocos ocupados.
 - `ExibeMemoria()`: Mostra a memória atual, indicando blocos livres e ocupados.
 - `OrdenaVectorMemoria()`: Ordena o vetor de blocos por endereço base.
+- `CalculaFragmentaçãoExterna()`: Calcula a fragmentação externa para memória contígua
+- `ExibeProcesso()`: Exibe a lista de processos alocados e não alocados com o endereço de base e limite para os que estão alocados na memória
 - Algoritmos de alocação:
   - `FirstFit(size_t tamanho)`
   - `BestFit(size_t tamanho)`
   - `WorstFit(size_t tamanho)`
   - `CircularFit(size_t tamanho)`
 - `SimuladorMemoriaContigua()`: Função principal que controla a interface e execução do simulador contíguo.
+
+## Exemplo de uso
+Escolha o modo de alocação:
+1. Alocação Contígua
+2. Paginação
+1
+
+== Menu Principal - Memória Contígua ==
+1. Definir Parâmetros da Memória
+2. Adicionar Processo
+3. Remover Processo
+4. Exibir Memória
+5. Resetar
+0. Sair
+Escolha uma opção: 1
+
+Informe o tamanho total da memória (KB): 1024
+Escolha o algoritmo de alocação (1-FirstFit, 2-BestFit, 3-WorstFit, 4-CircularFit): 2
+
+Escolha uma opção: 2
+Informe o nome do processo: P1
+Informe o tamanho do processo (KB): 200
+
+Escolha uma opção: 2
+Informe o nome do processo: P2
+Informe o tamanho do processo (KB): 300
+
+Escolha uma opção: 4
+=== Estado da Memória ===
+Bloco 0: PID 1, Tamanho 200 KB
+Bloco 1: PID 2, Tamanho 300 KB
+Bloco 2: LIVRE, Tamanho 524 KB
+
+Fragmentação interna: 0 KB (0.0%)
+
+## O conteúdo dos exemplos acima pode variar 
 
 ---
 
@@ -121,14 +159,84 @@ Classe que simula a alocação de memória paginada.
 - `RemoveProcesso(pid_t pid)`: Libera as páginas ocupadas pelo processo.
 - `ExibeMemoria()`: Mostra o estado atual da memória paginada.
 - `Simulador()`: Função principal que controla o menu e execução da simulação de paginação.
+- `CalculaFragmentacaoInterna()`: Calcula a fragmentação interna no modo de paginação
+
+## Exemplo de uso
+Escolha o modo de alocação:
+1. Alocação Contígua
+2. Paginação
+2
+
+== Menu Principal - Paginação ==
+1. Definir Parâmetros da Memória
+2. Adicionar Processo
+3. Remover Processo
+4. Exibir Tabelas de Páginas
+5. Resetar
+0. Sair
+Escolha uma opção: 1
+
+Informe o tamanho total da memória (KB): 1024
+Informe o tamanho do frame (KB): 128
+
+Escolha uma opção: 2
+Informe o nome do processo: P1
+Informe o tamanho do processo (KB): 200
+
+Escolha uma opção: 2
+Informe o nome do processo: P2
+Informe o tamanho do processo (KB): 300
+
+Escolha uma opção: 4
+=== Estado da Memória Física ===
+Frame 0: PID 1
+Frame 1: PID 1
+Frame 2: PID 2
+Frame 3: PID 2
+Frame 4: PID 2
+Frame 5: LIVRE
+Frame 6: LIVRE
+Frame 7: LIVRE
+
+=== Tabelas de Páginas ===
+PID 1: 0 1
+PID 2: 2 3 4
+
+Fragmentação interna (última página de cada processo):
+P1: 56 KB
+P2: 32 KB
+Total: 88 KB (8.59%)
+
+## O conteúdo dos exemplos acima pode variar 
 
 ---
 
 ## Como rodar o projeto
 
-Clone o repositório, compile e rode o simulador:
+- Para conseguir "rodar" o simulador, é importante e aconselhado que seja feito no terminal de um sistema operacional linux (a nível de facilidade e compatibilidade)e que esteja com a pate de compilador g++ 
+ atualizada para o uso correto do simulador, vale lembrar também que é preciso ter um conhecimento leve de como clonar repositórios de projetos do github, caso não tenha o conhecimento, abaixo estarão instrucoes gerais de como fazer esse processo:
 
-```bash
+ ## Intrucões para o uso do GITHUB
+- Criar uma conta no GitHub
+- Acesse: https://github.com
+- Clique em Sign up (ou Cadastrar-se).
+- Preencha:
+- Nome de usuário 
+- E-mail
+- Senha
+- Siga as instruções de verificação do e-mail.
+- Agora você tem uma conta no GitHub.
+
+- Instale o git em seu computador com um SO linux:
+- Utilize os comandos abaixo no terminal:
+    sudo apt update
+    sudo apt install git
+- No terminal, configure seu nome e e-mail (eles aparecem nos commits):
+- Utilize os comandos:
+    git config --global user.name "Seu Nome"
+    git config --global user.email "seu-email@exemplo.com"
+- Após esses passos acima clone o repositório, compile e rode o simulador a partir dos comandos abaixo:
+
 # Clonar o repositório
 git clone https://github.com/matheussebastiani/TrabalhoFinalSOII.git
 
@@ -136,10 +244,12 @@ git clone https://github.com/matheussebastiani/TrabalhoFinalSOII.git
 cd TrabalhoFinalSOII
 
 # Compilar os arquivos C++
-g++ -std=c++17 main.cpp classes/MemoriaContigua.cpp classes/MemoriaPaginada.cpp -o simulador ou com o uso do Makefile 
+g++ -std=c++17 main.cpp classes/MemoriaContigua.cpp classes/MemoriaPaginada.cpp -o simulador ou com o uso do Makefile presente na pasta
 
 # Executar o simulador
 ./simulador
+
+# CASO NÃO CONSIGA RODAR O SIMULADOR, REPITA OS PROCESSOS ACIMA NOVAMENTE COM ATENÇÃO
 
 
 
