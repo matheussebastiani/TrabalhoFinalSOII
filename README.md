@@ -28,12 +28,16 @@ O usuário interage com o simulador através de um menu no terminal, podendo cri
 - Remoção de processos da memória.
 - Visualização do estado atual da memória, mostrando blocos ocupados e livres.
 - Reset completo da memória e dos processos.
+- Cálculo de Fragmentação Interna:
+    O simulador calcula o espaço desperdiçado dentro de cada partição ocupada e exibe a porcentagem de fragmentação interna em relação à memória total.
 
 ### Paginação
 - Simulação de memória paginada.
 - Criação e alocação de processos em páginas.
 - Remoção de processos e atualização das páginas livres.
 - Visualização do estado atual da memória paginada.
+- Cálculo de Fragmentação Interna:
+    Para cada processo, o simulador calcula o espaço desperdiçado na última página alocada e exibe a porcentagem de fragmentação interna em relação à memória total.
 
 ---
 

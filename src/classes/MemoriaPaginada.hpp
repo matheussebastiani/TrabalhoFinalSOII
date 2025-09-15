@@ -55,6 +55,7 @@ private:
     std::unordered_map<pid_t, std::vector<int>> tabelas_paginas; // Tabela de páginas de cada processo
 
 public:
+    double CalculaFragmentacaoInterna();
     MemoriaPaginada();
     ~MemoriaPaginada();
 

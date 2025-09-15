@@ -180,7 +180,7 @@ void MemoriaPaginada::RemoveProcesso(pid_t pid) {
 void MemoriaPaginada::ExibeMemoria() {
     cout << "=== Estado da Memória Física ===" << endl;
     for (size_t i = 0; i < memoria_fisica.size(); i++) {
-        cout << "Frame " << i << ": ";
+        cout << "Frame " << i << " com o processo: ";
         if (memoria_fisica[i] == -1)
             cout << "LIVRE";
         else
@@ -190,10 +190,23 @@ void MemoriaPaginada::ExibeMemoria() {
 
     cout << "\n=== Tabelas de Páginas ===" << endl;
     for (auto &entry : tabelas_paginas) {
-        cout << "PID " << entry.first << ": ";
+        cout << "PID do processo: " << entry.first << " Frame: ";
         for (int f : entry.second) cout << f << " ";
         cout << endl;
     }
+}
+double MemoriaPaginada::CalculaFragmentacaoInterna() {    //função que calcula a fragmentaçao interna (posterioermente irá mostrar ao usuário)
+    int desperdicio_total = 0;
+
+    for (auto &proc : processos) {
+        if (proc.alocado) {
+            int resto = proc.tamanho % tamanho_frame;
+            if (resto > 0)
+                desperdicio_total += (tamanho_frame - resto);
+        }
+    }
+
+    return (desperdicio_total * 100.0) / tamanho_total_memoria; // porcentagem
 }
 
 //Simulador principal
@@ -248,6 +261,8 @@ void MemoriaPaginada::Simulador() {
             }
             case 4:
                 ExibeMemoria();    //chama a função que ira exibir a memória no simulador
+                cout << "Fragmentação Interna (Paginação): "
+                << CalculaFragmentacaoInterna() << "%" << endl;  //exibe a porcentagem de FRAGMENTAÇÃO EXTERNA (paginação)
                 break;
             case 5:
                 ResetarMemoria();
