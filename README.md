@@ -65,13 +65,21 @@ O projeto utiliza bibliotecas padrão do C++, não foi necessário a instalaçã
 ## Estrutura de Arquivos
 
 /project-root
+
 │
+
 ├── main.cpp # Ponto de entrada do programa
+
 ├── classes/
+
 │ ├── MemoriaContigua.hpp # Declaração da classe de alocação contígua
+
 │ ├── MemoriaContigua.cpp # Implementação das funções da alocação contígua
+
 │ ├── MemoriaPaginada.hpp # Declaração da classe de paginação
+
 │ └── MemoriaPaginada.cpp # Implementação das funções de paginação
+
 └── README.md # Este arquivo
 
 ## Decisões de Projeto e Arquitetura
@@ -109,38 +117,57 @@ Classe que simula a alocação contígua de memória.
 - `SimuladorMemoriaContigua()`: Função principal que controla a interface e execução do simulador contíguo.
 
 ## Exemplo de uso
-Escolha o modo de alocação:
-1. Alocação Contígua
-2. Paginação
-1
+    Escolha o modo de alocação:
+    
+    1. Alocação Contígua
+    
+    2. Paginação
+    
+    > 1
 
-== Menu Principal - Memória Contígua ==
-1. Definir Parâmetros da Memória
-2. Adicionar Processo
-3. Remover Processo
-4. Exibir Memória
-5. Resetar
-0. Sair
-Escolha uma opção: 1
+    == Menu Principal - Memória Contígua ==
+    
+    1. Definir Parâmetros da Memória
+    
+    2. Adicionar Processo
+    
+    3. Remover Processo
+    
+    4. Exibir Memória
+    
+    5. Resetar
+    
+    0. Sair
+    
+    Escolha uma opção: 1
 
-Informe o tamanho total da memória (KB): 1024
-Escolha o algoritmo de alocação (1-FirstFit, 2-BestFit, 3-WorstFit, 4-CircularFit): 2
-
-Escolha uma opção: 2
-Informe o nome do processo: P1
-Informe o tamanho do processo (KB): 200
-
-Escolha uma opção: 2
-Informe o nome do processo: P2
-Informe o tamanho do processo (KB): 300
-
-Escolha uma opção: 4
-=== Estado da Memória ===
-Bloco 0: PID 1, Tamanho 200 KB
-Bloco 1: PID 2, Tamanho 300 KB
-Bloco 2: LIVRE, Tamanho 524 KB
-
-Fragmentação interna: 0 KB (0.0%)
+    Informe o tamanho total da memória (KB): 1024
+    
+    Escolha o algoritmo de alocação (1-FirstFit, 2-BestFit, 3-WorstFit, 4-CircularFit): 2
+    
+    Escolha uma opção: 2
+    
+    Informe o nome do processo: P1
+    
+    Informe o tamanho do processo (KB): 200
+    
+    Escolha uma opção: 2
+    
+    Informe o nome do processo: P2
+    
+    Informe o tamanho do processo (KB): 300
+    
+    Escolha uma opção: 4
+    
+    === Estado da Memória ===
+    
+    Bloco 0: PID 1, Tamanho 200 KB
+    
+    Bloco 1: PID 2, Tamanho 300 KB
+    
+    Bloco 2: LIVRE, Tamanho 524 KB
+    
+    Fragmentação interna: 0 KB (0.0%)
 
 ## O conteúdo dos exemplos acima pode variar 
 
@@ -162,50 +189,79 @@ Classe que simula a alocação de memória paginada.
 - `CalculaFragmentacaoInterna()`: Calcula a fragmentação interna no modo de paginação
 
 ## Exemplo de uso
-Escolha o modo de alocação:
-1. Alocação Contígua
-2. Paginação
-2
-
-== Menu Principal - Paginação ==
-1. Definir Parâmetros da Memória
-2. Adicionar Processo
-3. Remover Processo
-4. Exibir Tabelas de Páginas
-5. Resetar
-0. Sair
-Escolha uma opção: 1
-
-Informe o tamanho total da memória (KB): 1024
-Informe o tamanho do frame (KB): 128
-
-Escolha uma opção: 2
-Informe o nome do processo: P1
-Informe o tamanho do processo (KB): 200
-
-Escolha uma opção: 2
-Informe o nome do processo: P2
-Informe o tamanho do processo (KB): 300
-
-Escolha uma opção: 4
-=== Estado da Memória Física ===
-Frame 0: PID 1
-Frame 1: PID 1
-Frame 2: PID 2
-Frame 3: PID 2
-Frame 4: PID 2
-Frame 5: LIVRE
-Frame 6: LIVRE
-Frame 7: LIVRE
-
-=== Tabelas de Páginas ===
-PID 1: 0 1
-PID 2: 2 3 4
-
-Fragmentação interna (última página de cada processo):
-P1: 56 KB
-P2: 32 KB
-Total: 88 KB (8.59%)
+    Escolha o modo de alocação:
+    
+    1. Alocação Contígua
+    
+    2. Paginação
+    
+    2
+    
+    == Menu Principal - Paginação ==
+    
+    1. Definir Parâmetros da Memória
+    
+    2. Adicionar Processo
+    
+    3. Remover Processo
+    
+    4. Exibir Tabelas de Páginas
+    
+    5. Resetar
+    
+    0. Sair
+    
+    Escolha uma opção: 1
+    
+    Informe o tamanho total da memória (KB): 1024
+    
+    Informe o tamanho do frame (KB): 128
+    
+    Escolha uma opção: 2
+    
+    Informe o nome do processo: P1
+    
+    Informe o tamanho do processo (KB): 200
+    
+    Escolha uma opção: 2
+    
+    Informe o nome do processo: P2
+    
+    Informe o tamanho do processo (KB): 300
+    
+    Escolha uma opção: 4
+    
+    === Estado da Memória Física ===
+    
+    Frame 0: PID 1
+    
+    Frame 1: PID 1
+    
+    Frame 2: PID 2
+    
+    Frame 3: PID 2
+    
+    Frame 4: PID 2
+    
+    Frame 5: LIVRE
+    
+    Frame 6: LIVRE
+    
+    Frame 7: LIVRE
+    
+    === Tabelas de Páginas ===
+    
+    PID 1: 0 1
+    
+    PID 2: 2 3 4
+    
+    Fragmentação interna (última página de cada processo):
+    
+    P1: 56 KB
+    
+    P2: 32 KB
+    
+    Total: 88 KB (8.59%)
 
 ## O conteúdo dos exemplos acima pode variar 
 
@@ -233,21 +289,23 @@ Total: 88 KB (8.59%)
     sudo apt install git
 - No terminal, configure seu nome e e-mail (eles aparecem nos commits):
 - Utilize os comandos:
-    git config --global user.name "Seu Nome"
-    git config --global user.email "seu-email@exemplo.com"
+
+  `git config --global user.name "Seu Nome"`
+  
+  `git config --global user.email "seu-email@exemplo.com"`
 - Após esses passos acima clone o repositório, compile e rode o simulador a partir dos comandos abaixo:
 
 # Clonar o repositório
-git clone https://github.com/matheussebastiani/TrabalhoFinalSOII.git
+    git clone https://github.com/matheussebastiani/TrabalhoFinalSOII.git
 
 # Entrar na pasta do projeto
-cd TrabalhoFinalSOII
+    cd TrabalhoFinalSOII
 
 # Compilar os arquivos C++
-g++ -std=c++17 main.cpp classes/MemoriaContigua.cpp classes/MemoriaPaginada.cpp -o simulador ou com o uso do Makefile presente na pasta
+    g++ -std=c++17 main.cpp classes/MemoriaContigua.cpp classes/MemoriaPaginada.cpp -o simulador ou com o uso do Makefile presente na pasta
 
 # Executar o simulador
-./simulador
+    ./simulador
 
 # CASO NÃO CONSIGA RODAR O SIMULADOR, REPITA OS PROCESSOS ACIMA NOVAMENTE COM ATENÇÃO
 
