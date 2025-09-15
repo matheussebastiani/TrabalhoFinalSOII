@@ -2,19 +2,40 @@
 
 Repositório para armazenar e documentar o trabalho final da disciplina de Sistemas Operacionais II
 
+## Integrantes 
+- Gustavo Luiz Rosset - 198100
+- Matheus Sebastiani Silva - 198204
+
 # Simulador de Gerência de Memória
 
-## Descrição
-Este projeto é um simulador de gerenciamento de memória inspirado em sistemas operacionais.  
-Permite estudar e testar diferentes algoritmos de alocação de memória e entender como processos são armazenados, removidos e organizados na memória.
-
+## Descrição do Projeto
+Este projeto é um **Simulador de Gerência de Memória**, desenvolvido como trabalho final da disciplina de Sistemas Operacionais II.  
+O simulador permite estudar e testar diferentes algoritmos de alocação de memória, observar como processos são armazenados, removidos e organizados na memória, e calcular a fragmentação nos dois esquemas:
 O simulador possui **duas modalidades**:
 1. **Alocação Contígua**
 2. **Paginação**
 
 O usuário interage com o simulador através de um menu no terminal, podendo criar processos, alocá-los, removê-los e visualizar o estado da memória.
 
----
+## Linguagem e Interface
+- Linguagem de programação: **C++17**  
+- Interface: **Terminal / Console** (CLI), com menus interativos para manipulação da memória e processos.
+
+## Bibliotecas utilizadas
+O projeto utiliza bibliotecas padrão do C++, não foi necessário a instalação de bibliotecas externas:
+
+<iostream>: para entrada e saída no console (cin, cout), usado para criar menus interativos e mostrar informações da memória.
+
+<limits>: para verificar limites de tipos de dados e limpar entradas inválidas do usuário, evitando erros de leitura.
+
+<cmath>: para cálculos matemáticos, como o ceil() usado para calcular o número de páginas necessárias para cada processo.
+
+<vector>: para armazenar dinamicamente listas de processos, partições e páginas de memória.
+
+<string>: para armazenar nomes dos processos.
+
+<algorithm>: para ordenação de vetores de partições na memória contígua (por exemplo, função sort()).
+
 
 ## Funcionalidades
 
@@ -52,6 +73,12 @@ O usuário interage com o simulador através de um menu no terminal, podendo cri
 │ ├── MemoriaPaginada.hpp # Declaração da classe de paginação
 │ └── MemoriaPaginada.cpp # Implementação das funções de paginação
 └── README.md # Este arquivo
+
+## Decisões de Projeto e Arquitetura
+- Separação das funcionalidades em **duas classes principais**: `MemoriaContigua` e `MemoriaPaginada`.  
+- Cada classe possui métodos próprios para criar/remover processos, alocar memória e exibir o estado atual.  
+- Menu interativo no console, facilitando a interação do usuário sem necessidade de interface gráfica complexa.  
+- Estrutura modular permite fácil manutenção e extensão dos algoritmos de alocação.
 
 ## Principais Classes e Funções
 
