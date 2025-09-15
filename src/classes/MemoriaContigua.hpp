@@ -74,6 +74,8 @@ public:
     void OrdenaVectorMemoria();
     void ExibeMemoria();
     void RemoveProcesso(pid_t pid);
+    float CalculaFragmentacaoExterna();
+    void ExibeProcessos();
 
 };
 

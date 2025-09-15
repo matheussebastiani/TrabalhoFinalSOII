@@ -52,8 +52,6 @@ int main(){
     
     std::cin >> option;
 
-    std::cout << option;
-
     MemoriaContigua simulador;
 
     switch(option){

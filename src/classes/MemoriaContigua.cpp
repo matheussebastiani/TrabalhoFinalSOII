@@ -39,6 +39,7 @@ Estrutura de dados:
 #include <string>
 #include <algorithm> // std::sort -> será necessário para manter o vector ordenado
 #include <limits>
+#include <iomanip>
 
 using namespace std;
 
@@ -53,6 +54,8 @@ int MemoriaContigua::PrintMenu()
     cout << "\t 3. Remover Processos" << endl;
     cout << "\t 4. Exibir Memória" << endl;
     cout << "\t 5. Resetar" << endl;
+    cout << "\t 6. Calcular Fragmentação Externa" << endl;
+    cout << "\t 7. Exibir tabela de Processos Existentes" << endl;
     cout << "\t 0. Sair" << endl;
     cout << "Escolha uma opção: ";
     cin >> opcao;
@@ -232,11 +235,41 @@ void MemoriaContigua::ExibeMemoria() {
 
         std::cout << "Bloco " << i 
                   << ": Base = " << bloco.base               //mostra o bloco, a base, o amanho e se esta livre ou ocupado, com  PID
+                  << ", Limite = " << bloco.base + (bloco.tamanho - 1) // Mostra o limite
                   << ", Tamanho = " << bloco.tamanho << " KB, "
                   << (bloco.livre ? "Livre" : "Ocupado (PID " + std::to_string(bloco.PID) + ")")
                   << std::endl;
     }
     std::cout << "=========================" << std::endl;
+}
+
+// Exibe todos os processos alocados na memória com endereço de base e limite mantém o histórico de processos removidos
+void MemoriaContigua::ExibeProcessos(){
+
+    if(processos.empty()){
+        cout << "Nenhum processo foi criado até o momento" << endl;
+        return;
+    }
+
+    cout << "=== Lista de Processos ===" << endl;
+
+    for(const auto p : processos){ // Só quero exibir
+        
+        cout << "PID: " << p.PID << " (" << p.nome << ") ";
+
+        if(p.alocado){
+            cout << "Alocado | Base = " << p.base
+            << " | Limite = " << p.limite << endl;
+        
+        } else{
+            
+            cout << "Não alocado." << endl;
+        }
+        
+    }
+
+    cout << "==========================" << endl;
+
 }
 
 /*
@@ -511,6 +544,8 @@ void MemoriaContigua::RemoveProcesso(pid_t pid) {
 void MemoriaContigua::SimuladorMemoriaContigua()
 {
 
+    float percentualFragmentacao;
+
     while (1)
     {
 
@@ -561,7 +596,21 @@ void MemoriaContigua::SimuladorMemoriaContigua()
             contador_pids = 0;
             std::cout << "Simulador resetado!" << std::endl;
             break;
+        
+        case 6:
 
+            //Exibe a porcentagem
+            
+            percentualFragmentacao = CalculaFragmentacaoExterna();
+            cout << "Percentual de Fragmentação Externa " << fixed << setprecision(2) << percentualFragmentacao << "%" << endl;
+            break;
+
+        case 7:
+            // Exibe a porcentagem de processos alocados e já alocados
+
+            ExibeProcessos();
+            break;
+        
         case 0:
 
             // Break. Sai do laço e mostra as estatísticas finais
@@ -577,3 +626,42 @@ void MemoriaContigua::SimuladorMemoriaContigua()
         }
     }
 }
+
+/* Essa função irá calcular a fragmentação externa da memória */
+// Com a remoção de processos da memória, aparecerão pequenas "lacunas" entre os processos
+// Esses fragmentos pequenos de memória deverão ser somados
+// Para o cálculo da fragmentação, só será considerado que a memória está fragmentada caso existam dois blocos de memória não contíguos livres
+// A partir daí, a memória será considerada fragmentada
+
+float MemoriaContigua::CalculaFragmentacaoExterna(){
+
+    int contadorLivres = 0;
+    size_t TotalLivre = 0;
+    float porcentagem_fragmentacao;
+
+    if(particoes.empty())
+        return 0.0f;
+    
+    OrdenaVectorMemoria();
+
+    for(auto b : particoes){
+        if(b.livre){
+            contadorLivres++;
+            TotalLivre += b.tamanho;
+        }
+    }
+
+    if(contadorLivres >= 2){
+        // Porcentagem da fragmentação da memória
+        return (static_cast<float>(TotalLivre) / TAMANHO_TOTAL_MEMORIA) * 100.0f;
+
+    } else { // 1 bloco livre -> não há fragmentação
+        porcentagem_fragmentacao = 0.0f;
+    }
+
+    return porcentagem_fragmentacao;
+
+
+}
+
+
